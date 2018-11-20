@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		
+		<script src="js/jquery-1.7.1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/datetimepicker.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/datetimepicker.css"/>
+		
+		<script type="text/javascript">
+			$(function() {
+				
+				var ymdt_config = {
+					output_tag: "/",
+					month_year_bar: true,
+					day_table: true,
+					time_bar: true,
+					output_year: "small"
+				}
+				var ymd_config = {
+					output_tag: "/",
+					month_year_bar: true,
+					day_table: true,
+					time_bar: false,
+					output_year: "small"
+				}
+				var ym_config = {
+					output_tag: "/",
+					month_year_bar: true,
+					day_table: false,
+					time_bar: false,
+					output_year: "small"
+				}
+				var t_config = {
+					output_tag: "/",
+					month_year_bar: false,
+					day_table: false,
+					time_bar: true,
+					output_year: "small"
+				}
+				
+				$('#ymdt').datetimepicker(ymdt_config);
+				$('#ymd').datetimepicker(ymd_config);
+				$('#ym').datetimepicker(ym_config);
+				$('#t').datetimepicker(t_config);
+
+			})
+		</script>
+	</head>
+
+	<body>
+		<h3>normal 用config設定</h3>
+		year_month_day_time<input type="text" name="" id="ymdt" value="" /><br /><br />
+		year_month_day <input type="text" name="" id="ymd" value="" /><br /><br /> 
+		year_month <input type="text" name="" id="ym" value="" /><br /><br /> 
+		time <input type="text" name="" id="t" value="" /><br /><br />
+		<br /><br />
+		<h3>用classname設定</h3>
+		
+		year_month_day_time<input type="text" class="trbdatetime[time='true'] " /><br /><br />
+		year_month_day <input type="text" class="trbdatetime" /><br /><br /> 
+		year_month <input type="text" class="trbdatetime[day='false']" /><br /><br /> 
+		time <input type="text" class="trbdatetime[day='false';y&m='false';time='true']" /><br /><br />
+		
+		
+		<script type="text/javascript">
+			$(function() {
+
+				function init_findDTpickerinfo() {
+					$('[class*=trbdatetime]').each(function(i) {
+
+						var classname = $(this).attr('class');
+						console.log(classname)
+						if(classname === undefined) {
+							return;
+						}
+
+						var datetimepicker_config = {
+							output_tag: "/",
+							month_year_bar: true,
+							day_table: true,
+							time_bar: false,
+							output_year: "small"
+						}
+
+						var isOnlydatetime =$(this).hasClass('trbdatetime');
+						if(isOnlydatetime) {
+
+							$(this).datetimepicker();
+							return;
+						}
+
+						var index = classname.indexOf('trbdatetime');
+						var lastmarkindex = classname.indexOf(']', index);
+						var class_msg = classname.substring(index + 12, lastmarkindex);
+						var msg_arr = class_msg.split(";");
+
+						for(var i = 0; i < msg_arr.length; i++) {
+							var temp_arr = msg_arr[i].split('=');
+							var status;
+
+							switch(temp_arr[0].trim()) {
+								case 'tag':
+									datetimepicker_config.output_tag = temp_arr[1].replace(/"|'/g, "").trim();
+									break;
+								case 'y&m':
+									status = temp_arr[1].replace(/"|'/g, "").trim();
+									datetimepicker_config.month_year_bar = (status == 'true') ? true : false;
+									break;
+								case 'day':
+									status = temp_arr[1].replace(/"|'/g, "").trim();
+									datetimepicker_config.day_table = (status == 'true') ? true : false;
+									break;
+								case 'time':
+									status = temp_arr[1].replace(/"|'/g, "").trim();
+									datetimepicker_config.time_bar = (status == 'true') ? true : false;
+									break;
+								case 'year':
+									datetimepicker_config.output_year = temp_arr[1].replace(/"|'/g, "").trim();
+									break;
+							}
+						}
+									$(this).datetimepicker(datetimepicker_config);
+					});
+
+				}
+				init_findDTpickerinfo()
+			})
+		
+		</script>
+	</body>
+
+</html>
